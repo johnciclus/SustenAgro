@@ -1,0 +1,34 @@
+<link rel="import"  href="https://polygit.org/polymer+2.0.0-rc.2/iron-input+polymerelements+:2.0-preview/shadycss+webcomponents+1.0.0-rc.2/components/polymer/polymer-element.html">
+
+<link rel="import"  href="https://polygit.org/polymer+2.0.0-rc.2/iron-input+polymerelements+:2.0-preview/shadycss+webcomponents+1.0.0-rc.2/components/iron-input/iron-input.html">
+
+
+<dom-module id="swc-sustenagro">
+    <template>
+        <!-- bind to the "owner" property -->
+        <p>This is <b>[[owner]]</b>'s name-tag element.</p>
+
+        <!-- iron-input exposes a two-way bindable input value -->
+        <iron-input bind-value="{{owner}}">
+            <input is="iron-input" placeholder="Your name here...">
+        </iron-input>
+    </template>
+    <script>
+        class SustenAgro extends Polymer.Element {
+
+            static get is() { return 'swc-sustenagro'; }
+
+
+            static get properties() {
+                return {
+                    owner: {
+                        type: String,
+                        value: 'Daniel'
+                    }
+                };
+            }
+        }
+        customElements.define(SustenAgro.is, SustenAgro);
+    </script>
+</dom-module>
+
