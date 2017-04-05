@@ -2,7 +2,15 @@
   "name": "SustenAgro",
   "main": "index.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.4.0"
+    "polymer": "Polymer/polymer#^1.4.0",
+    "juicy-ace-editor": "^2.0.0",
+    "paper-menu-button": "^1.5.2",
+    "paper-item": "^1.2.1",
+    "paper-icon-button": "^1.1.4",
+    "paper-menu": "^1.2.2",
+    "iron-icons": "^1.2.0",
+    "iron-icon": "^1.0.12",
+    "paper-toolbar": "^1.1.7"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

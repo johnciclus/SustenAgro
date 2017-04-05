@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/juicy-ace-editor/juicy-ace-editor.html">
+
+<dom-module id="swc-dsl-editor">
+    <template>
+        <div>
+            <juicy-ace-editor id="dslEditor" theme="ace/theme/chrome" mode="ace/mode/groovy" fontSize="14px"></juicy-ace-editor>
+        </div>
+        <style>
+            juicy-ace-editor {
+                margin: 15px 0px;
+                width: 100%;
+                min-height: 800px;
+                border: 1px solid #DDD;
+                border-radius: 4px;
+            }
+        </style>
+    </template>
+    <script>
+        Polymer({
+            is: 'swc-dsl-editor'
+        });
+
+        function httpGet(theUrl, callback){
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                    callback(xmlHttp.responseText);
+            }
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous
+            xmlHttp.send(null);
+        }
+
+        httpGet('http://rest-service.guides.spring.io/greeting', function(data){
+            document.getElementById('dslEditor').value = data;
+        })
+
+    </script>
+</dom-module>
