@@ -10,31 +10,12 @@
         <style>
             juicy-ace-editor {
                 margin: 15px 0px;
-                width: 100%;
+                width: inherit;
                 min-height: 800px;
                 border: 1px solid #DDD;
                 border-radius: 4px;
             }
         </style>
     </template>
-    <script>
-        Polymer({
-            is: 'swc-dsl-editor'
-        });
-
-        function httpGet(theUrl, callback){
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = function() {
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                    callback(xmlHttp.responseText);
-            }
-            xmlHttp.open("GET", theUrl, true); // true for asynchronous
-            xmlHttp.send(null);
-        }
-
-        httpGet('http://rest-service.guides.spring.io/greeting', function(data){
-            document.getElementById('dslEditor').value = data;
-        })
-
-    </script>
+    <script src="swc-dsl-editor.js"></script>
 </dom-module>

@@ -1,6 +1,9 @@
 {
   "name": "SustenAgro",
   "main": "index.html",
+  "authors": [
+    "John Garavito <john@ciclus.co>"
+  ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
     "juicy-ace-editor": "^2.0.0",
@@ -10,7 +13,11 @@
     "paper-menu": "^1.2.2",
     "iron-icons": "^1.2.0",
     "iron-icon": "^1.0.12",
-    "paper-toolbar": "^1.1.7"
+    "paper-toolbar": "^1.1.7",
+    "app-layout": "PolymerElements/app-layout#^0.10.7",
+    "rest": "^2.0.0",
+    "curl": "^0.8.13",
+    "when": "^3.7.8"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
