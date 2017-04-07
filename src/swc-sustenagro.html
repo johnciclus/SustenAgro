@@ -39,7 +39,7 @@
                 background-color: #2196f3;
             }
 
-            paper-tabs {
+            paper-toolbar paper-tabs {
                 font-size: 16px;
                 --paper-tabs-selection-bar-color: #ddd;
             }
@@ -72,38 +72,65 @@
             </paper-menu-button>
         </paper-toolbar>
 
-        <div class="horizontal layout">
-            <div class="flex">
-                <iron-pages selected="{{selected}}">
-                    <div>
-                        <div class="horizontal end-justified layout">
-                            <paper-button raised on-tap="saveDSL" >
-                                <iron-icon icon="save"></iron-icon>SAVE
-                            </paper-button>
-                            <paper-button raised>
-                                <iron-icon icon="restore"></iron-icon>RESTORE
-                            </paper-button>
-                        </div>
-                        <swc-dsl-editor></swc-dsl-editor>
+        <iron-pages selected="{{selected}}">
+            <div class="horizontal layout">
+                <div class="flex">
+                    <div class="horizontal end-justified layout">
+                        <paper-button raised on-tap="saveDSL" >
+                            <iron-icon icon="save"></iron-icon>SAVE
+                        </paper-button>
+                        <paper-button raised>
+                            <iron-icon icon="restore"></iron-icon>RESTORE
+                        </paper-button>
                     </div>
+                    <swc-dsl-editor></swc-dsl-editor>
+                </div>
+                <div class="flex">
+                    <div id="render">
+
+                    </div>
+                </div>
+            </div>
+            <div class="horizontal layout">
+                <div class="flex">
                     <div>
                         <swc-dsl-render></swc-dsl-render>
                     </div>
-                </iron-pages>
+                </div>
+                <div class="flex">
+
+                </div>
             </div>
-            <div class="flex">
-                <p>hello</p>
-            </div>
-        </div>
+        </iron-pages>
   </template>
 
   <script>
     Polymer({
-
         is: 'swc-sustenagro',
 
         saveDSL: function(e) {
-            document.getElementById('dslEditor').value;
+            var code = {code: document.getElementById('dslEditor').value};
+            RestClient({path: 'http://localhost:8080/DSL', entity: JSON.stringify(code)}).then(function (response) {
+                var render = document.getElementById('render');
+                var node;
+                var textnode;
+
+                var tabs = document.createElement("paper-tabs");
+                var tabsContent = tabs.$.tabsContent;
+
+                tabs.setAttribute("class", 'style-scope swc-sustenagro');
+                tabs.setAttribute("noink", '')
+
+                for(var idx in response.entity){
+                    node = document.createElement("paper-tab");
+                    textnode = document.createTextNode(response.entity[idx].id);
+                    node.getElementsByTagName('div')[0].appendChild(textnode);
+                    console.log(node)
+                    tabsContent.appendChild(node);
+                }
+                console.log(tabs);
+                render.appendChild(tabs);
+            });
         },
 
         properties: {
@@ -124,6 +151,12 @@
                 type: String
             }
         }
+    });
+
+
+    RestClient({path: 'http://localhost:8080/DSL'}).then(function (response) {
+        var code = response.entity.code;
+        document.getElementById('dslEditor').value = code;
     });
   </script>
 </dom-module>
