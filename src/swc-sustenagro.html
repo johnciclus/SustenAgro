@@ -14,6 +14,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./swc-dsl-editor.html">
 <link rel="import" href="./swc-dsl-render.html">
+<link rel="import" href="./swc-tabs-pages.html">
 
 <dom-module id="swc-sustenagro">
     <template>
@@ -39,7 +40,7 @@
                 background-color: #2196f3;
             }
 
-            paper-toolbar paper-tabs {
+            paper-tabs {
                 font-size: 16px;
                 --paper-tabs-selection-bar-color: #ddd;
             }
@@ -76,17 +77,17 @@
             <div class="horizontal layout">
                 <div class="flex">
                     <div class="horizontal end-justified layout">
-                        <paper-button raised on-tap="saveDSL" >
+                        <paper-button raised on-tap="saveDSL">
                             <iron-icon icon="save"></iron-icon>SAVE
                         </paper-button>
-                        <paper-button raised>
+                        <paper-button raised on-tap="clearViewDiv">
                             <iron-icon icon="restore"></iron-icon>RESTORE
                         </paper-button>
                     </div>
                     <swc-dsl-editor></swc-dsl-editor>
                 </div>
                 <div class="flex">
-                    <div id="render">
+                    <div id="view">
 
                     </div>
                 </div>
@@ -98,7 +99,7 @@
                     </div>
                 </div>
                 <div class="flex">
-
+                    <swc-tabs-pages selected-tab="{{selectedTab}}" tab-items='[{"name": "Tab 0"}, {"name": "Tab 1"}, {"name": "Tab 2"}]'></swc-tabs-pages>
                 </div>
             </div>
         </iron-pages>
@@ -110,27 +111,14 @@
 
         saveDSL: function(e) {
             var code = {code: document.getElementById('dslEditor').value};
+            var renderDiv = this.$.view;
             RestClient({path: 'http://localhost:8080/DSL', entity: JSON.stringify(code)}).then(function (response) {
-                var render = document.getElementById('render');
-                var node;
-                var textnode;
-
-                var tabs = document.createElement("paper-tabs");
-                var tabsContent = tabs.$.tabsContent;
-
-                tabs.setAttribute("class", 'style-scope swc-sustenagro');
-                tabs.setAttribute("noink", '')
-
-                for(var idx in response.entity){
-                    node = document.createElement("paper-tab");
-                    textnode = document.createTextNode(response.entity[idx].id);
-                    node.getElementsByTagName('div')[0].appendChild(textnode);
-                    console.log(node)
-                    tabsContent.appendChild(node);
-                }
-                console.log(tabs);
-                render.appendChild(tabs);
+                render(response.entity, renderDiv)
             });
+        },
+
+        clearViewDiv: function(e){
+            this.$.view.innerHTML = "";
         },
 
         properties: {
@@ -152,6 +140,34 @@
             }
         }
     });
+
+    function render(elements, parent){
+        console.log('elements')
+        console.log(elements)
+        console.log('parent')
+        console.log(parent)
+        if(elements.length>0){
+            var tabs = createTabs(elements);
+            parent.appendChild(tabs)
+
+            setTimeout(function() {
+                for(var idx in elements){
+                    render(elements[idx].children, tabs.getPage(idx))
+                }
+            }, 0);
+        }
+    }
+
+    function createTabs(elements){
+        var tabs = document.createElement('swc-tabs-pages');
+        var tabsItems = [];
+
+        for(var idx in elements){
+            tabsItems.push({"name": elements[idx].id});
+        }
+        tabs.setAttribute("tab-items", JSON.stringify(tabsItems));
+        return tabs;
+    }
 
 
     RestClient({path: 'http://localhost:8080/DSL'}).then(function (response) {
