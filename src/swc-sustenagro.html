@@ -142,19 +142,39 @@
     });
 
     function render(elements, parent){
-        console.log('elements')
+        /*console.log('elements')
         console.log(elements)
         console.log('parent')
-        console.log(parent)
+        console.log(parent)*/
+        var type;
         if(elements.length>0){
-            var tabs = createTabs(elements);
-            parent.appendChild(tabs)
-
-            setTimeout(function() {
-                for(var idx in elements){
-                    render(elements[idx].children, tabs.getPage(idx))
+            for(var idx in elements){
+                if(type == undefined || type == elements[idx].type){
+                    type = elements[idx].type
                 }
-            }, 0);
+                else{
+                    type == undefined;
+                }
+            }
+            if(type == 'tab' || type == 'feature'){
+                var tabs = createTabs(elements);
+                parent.appendChild(tabs)
+
+                setTimeout(function() {
+                    for(var idx in elements){
+                        render(elements[idx].children, tabs.getPage(idx))
+                    }
+                }, 0);
+            }
+            else{
+                var h4;
+
+                for(var idx in elements){
+                    h4 = document.createElement('h4')
+                    h4.innerHTML = elements[idx].label
+                    parent.appendChild(h4)
+                }
+            }
         }
     }
 
@@ -163,7 +183,7 @@
         var tabsItems = [];
 
         for(var idx in elements){
-            tabsItems.push({"name": elements[idx].id});
+            tabsItems.push({"name": elements[idx].label});
         }
         tabs.setAttribute("tab-items", JSON.stringify(tabsItems));
         return tabs;
