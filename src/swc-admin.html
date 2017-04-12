@@ -1,0 +1,198 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-icons">
+<link rel="import" href="../bower_components/iron-icon">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./swc-dsl-editor.html">
+<link rel="import" href="./swc-dsl-render.html">
+<link rel="import" href="./swc-tabs-pages.html">
+
+<dom-module id="swc-sustenagro">
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+            body{
+                font-size: 14px;
+            }
+            paper-toolbar {
+                color: #2196f3;
+                --paper-toolbar-background: #FFF;
+                --paper-toolbar-title: {
+                    font-weight: bold;
+                };
+            }
+
+            paper-toolbar span{
+                color: #000;
+            }
+
+            paper-button{
+                font-size: 12px;
+                color: #FFF;
+                background-color: #2196f3;
+            }
+
+            paper-tabs {
+                font-size: 16px;
+                --paper-tabs-selection-bar-color: #ddd;
+            }
+        </style>
+
+        <app-location route="{{route}}"></app-location>
+
+        <app-route
+                route="{{route}}"
+                pattern="/:page"
+                data="{{routeData}}"
+                tail="{{subroute}}">
+        </app-route>
+
+        <paper-toolbar>
+            <span class="title">Decisioner</span>
+
+            <paper-tabs selected="{{selected}}" noink>
+                <paper-tab>DSL Editor</paper-tab>
+                <paper-tab>Ontology Editor</paper-tab>
+            </paper-tabs>
+
+            <paper-menu-button>
+                <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+                <paper-menu class="dropdown-content">
+                    <paper-item>Admin</paper-item>
+                    <paper-item>Settings</paper-item>
+                    <paper-item>Exit</paper-item>
+                </paper-menu>
+            </paper-menu-button>
+        </paper-toolbar>
+
+        <iron-pages selected="{{selected}}">
+            <div class="horizontal layout">
+                <div class="flex">
+                    <div class="horizontal end-justified layout">
+                        <paper-button raised on-tap="saveDSL">
+                            <iron-icon icon="save"></iron-icon>SAVE
+                        </paper-button>
+                        <paper-button raised on-tap="clearViewDiv">
+                            <iron-icon icon="restore"></iron-icon>RESTORE
+                        </paper-button>
+                    </div>
+                    <swc-dsl-editor></swc-dsl-editor>
+                </div>
+                <div class="flex">
+                    <div id="view">
+
+                    </div>
+                </div>
+            </div>
+            <div class="horizontal layout">
+                <div class="flex">
+                    <div>
+                        <swc-dsl-render></swc-dsl-render>
+                    </div>
+                </div>
+                <div class="flex">
+                    <swc-tabs-pages selected-tab="{{selectedTab}}" tab-items='[{"name": "Tab 0"}, {"name": "Tab 1"}, {"name": "Tab 2"}]'></swc-tabs-pages>
+                </div>
+            </div>
+        </iron-pages>
+  </template>
+
+  <script>
+    Polymer({
+        is: 'swc-sustenagro',
+
+        saveDSL: function(e) {
+            var code = {code: document.getElementById('dslEditor').value};
+            var renderDiv = this.$.view;
+            RestClient({path: 'http://localhost:8080/DSL', entity: JSON.stringify(code)}).then(function (response) {
+                render(response.entity, renderDiv)
+            });
+        },
+
+        clearViewDiv: function(e){
+            this.$.view.innerHTML = "";
+        },
+
+        properties: {
+            selected:{
+                type: Number,
+                value: 0
+            },
+            model: {
+                type: Object,
+                value: function(){
+                    return {
+                        tab1: {content: 'foo'},
+                        tab2: {content: 'bar'}
+                    }
+                }
+            },
+            page: {
+                type: String
+            }
+        }
+    });
+
+    function render(elements, parent){
+        /*console.log('elements')
+        console.log(elements)
+        console.log('parent')
+        console.log(parent)*/
+        var type;
+        if(elements.length>0){
+            for(var idx in elements){
+                if(type == undefined || type == elements[idx].type){
+                    type = elements[idx].type
+                }
+                else{
+                    type == undefined;
+                }
+            }
+            if(type == 'tab' || type == 'feature'){
+                var tabs = createTabs(elements);
+                parent.appendChild(tabs)
+
+                setTimeout(function() {
+                    for(var idx in elements){
+                        render(elements[idx].children, tabs.getPage(idx))
+                    }
+                }, 0);
+            }
+            else{
+                var h4;
+
+                for(var idx in elements){
+                    h4 = document.createElement('h4')
+                    h4.innerHTML = elements[idx].label
+                    parent.appendChild(h4)
+                }
+            }
+        }
+    }
+
+    function createTabs(elements){
+        var tabs = document.createElement('swc-tabs-pages');
+        var tabsItems = [];
+
+        for(var idx in elements){
+            tabsItems.push({"name": elements[idx].label});
+        }
+        tabs.setAttribute("tab-items", JSON.stringify(tabsItems));
+        return tabs;
+    }
+
+
+    RestClient({path: 'http://localhost:8080/DSL'}).then(function (response) {
+        var code = response.entity.code;
+        document.getElementById('dslEditor').value = code;
+    });
+  </script>
+</dom-module>
