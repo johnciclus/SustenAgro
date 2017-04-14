@@ -12,6 +12,9 @@
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+
 <link rel="import" href="./swc-dsl-editor.html">
 <link rel="import" href="./swc-dsl-render.html">
 <link rel="import" href="./swc-tabs-pages.html">
@@ -24,6 +27,9 @@
         <div id="view">
 
         </div>
+        <div id="view2">
+
+        </div>
   </template>
 
   <script>
@@ -32,34 +38,40 @@
 
         ready: function(){
             var renderDiv = this.$.view;
+            var renderDiv2 = this.$.view2;
 
             RestClient({path: 'http://localhost:8080/'}).then(function (response) {
-                render(response.entity, renderDiv)
+                render(response.entity, renderDiv);
+                render2(response.entity) //, renderDiv2);
+                renderDiv2.innerHTML = html;
             });
         }
     });
 
     function render(elements, parent){
-        for(var idx in elements){
-            var element = elements[idx];
-            var swc = createWebComponent(element, parent);
-            setTimeout(createSubTree.bind(null, element, swc), 0);
+        if(typeof elements != 'undefined' && elements.length > 0) {
+            for (var idx in elements) {
+                var element = elements[idx];
+                var swc = createWebComponent(element, parent);
+
+                setTimeout(createSubTree.bind(null, element, swc), 0);
+            }
         }
     }
 
     function createSubTree(element, swc) {
         var children = element.children;
-        for(var idc in children){
-            var container = undefined;
-            if(swc !== undefined){
-                container = (typeof swc.getContainer === "function") ? swc.getContainer(idc) : swc;
-            }
-            else{
-                container = parent;
-            }
+        var current = element;
+        var container = swc;
 
-            var current = (children[idc].widget)? element : children[idc];
-
+        if(typeof swc.getContainer === "function"){
+            for(var idc in children){
+                current = children[idc];
+                container = swc.getContainer(idc)
+                render(current.children, container)
+            }
+        }
+        else{
             render(current.children, container)
         }
     }
@@ -83,15 +95,82 @@
                     break;
                 default:
                     var tag = document.createElement(element.widget);
-                    //tag.setAttribute('id', );
 
-                    if(element.label) {
-                        tag.innerHTML = element.label;
+                    if(element.id)
+                        tag.setAttribute('id', element.id);
+
+                    if(element.name)
+                        tag.setAttribute('name', element.name);
+
+                    if(element.label){
+                        var content = document.createTextNode(element.label);
+                        tag.appendChild(content)
                     }
+
+                    if(element['aria-labelledby'])
+                        tag.setAttribute('aria-labelledby', element['aria-labelledby']);
+
+                    if(element.value)
+                        tag.value = element.value;
+
+                    if(element.type)
+                        tag.setAttribute('type', element.type);
+
                     parent.appendChild(tag);
                     return tag;
             }
         }
+    }
+
+    var html = '';
+
+    function render2(elements){
+        if(typeof elements != 'undefined' && elements.length > 0) {
+            for (var idx in elements) {
+                var element = elements[idx];
+
+                if(typeof element.widget != 'undefined'){
+                    html += createStartTagHTML(element);
+                }
+
+                render2(element.children);
+
+                if(typeof element.widget != 'undefined'){
+                    html += createEndTagHTML(element);
+                }
+
+            }
+        }
+    }
+
+    function createStartTagHTML(element){
+        switch(element.widget){
+            case 'swc-tabs-pages':
+                var tabsItems = [];
+
+                for(var idx in element.children){
+                    tabsItems.push({"name": element.children[idx].label});
+                }
+
+                var tag = '<paper-tabs selected="{{selectedTab}}" noink>' //'<'+element.widget+' tab-items=\''+JSON.stringify(tabsItems)+'\'>';
+
+                return tag;
+                break;
+            default:
+                var tag = '<'+element.widget+' id="">';
+                return tag;
+        }
+
+    }
+
+    function createEndTagHTML(element){
+        switch(element.widget){
+            case 'swc-tabs-pages':
+                var tag = '</paper-tabs>'
+                return tab;
+            default:
+                var tag = '</'+element.widget+'>';
+                return tag;
     }
 
   </script>
