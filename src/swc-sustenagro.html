@@ -1,14 +1,18 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/iron-component-page/iron-component-page.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/iron-icons">
 <link rel="import" href="../bower_components/iron-icon">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -21,15 +25,53 @@
 
 <dom-module id="swc-sustenagro">
     <template>
-        <style include="iron-flex iron-flex-alignment">
+        <style>
 
+            app-header {
+                background-color: white;
+            }
+
+            app-toolbar {
+                background-color: white;
+                box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+            }
+
+            .content {
+                padding: 16px 40px;
+            }
+
+            .card {
+                background-color: white;
+                max-width: 720px;
+                margin: 16px auto;
+                box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+            }
+
+            @media (max-width: 600px) {
+                .content {
+                    padding: 0;
+                }
+                .card {
+                    margin: 8px;
+                }
+            }
         </style>
-        <div id="view">
+        <app-header-layout>
+            <app-header fixed effects="waterfall">
+                <app-toolbar>
+                    <paper-icon-button icon="menu"></paper-icon-button>
+                    <div main-title>SustenAgro</div>
+                </app-toolbar>
+            </app-header>
 
-        </div>
-        <div id="view2">
 
-        </div>
+            <form is="iron-form" id="form" method="post" action="/form/handler">
+                <div id="view" class="content">
+
+                </div>
+            </form>
+
+        </app-header-layout>
   </template>
 
   <script>
@@ -38,12 +80,11 @@
 
         ready: function(){
             var renderDiv = this.$.view;
-            var renderDiv2 = this.$.view2;
 
             RestClient({path: 'http://localhost:8080/'}).then(function (response) {
-                render(response.entity, renderDiv);
-                render2(response.entity) //, renderDiv2);
-                renderDiv2.innerHTML = html;
+                //render(response.entity, renderDiv);
+                renderHTML(response.entity);
+                renderDiv.innerHTML = html;
             });
         }
     });
@@ -102,6 +143,9 @@
                     if(element.name)
                         tag.setAttribute('name', element.name);
 
+                    if(element.value)
+                        tag.setAttribute('value', element.value);
+
                     if(element.label){
                         var content = document.createTextNode(element.label);
                         tag.appendChild(content)
@@ -124,7 +168,7 @@
 
     var html = '';
 
-    function render2(elements){
+    function renderHTML(elements){
         if(typeof elements != 'undefined' && elements.length > 0) {
             for (var idx in elements) {
                 var element = elements[idx];
@@ -133,12 +177,11 @@
                     html += createStartTagHTML(element);
                 }
 
-                render2(element.children);
+                renderHTML(element.children);
 
                 if(typeof element.widget != 'undefined'){
                     html += createEndTagHTML(element);
                 }
-
             }
         }
     }
@@ -149,28 +192,38 @@
                 var tabsItems = [];
 
                 for(var idx in element.children){
-                    tabsItems.push({"name": element.children[idx].label});
+                    tabsItems.push({"name": element.children[idx].label, "id": element.children[idx].id});
                 }
 
-                var tag = '<paper-tabs selected="{{selectedTab}}" noink>' //'<'+element.widget+' tab-items=\''+JSON.stringify(tabsItems)+'\'>';
-
-                return tag;
+                return "<swc-tabs-pages tab-items='"+JSON.stringify(tabsItems)+"'>";
                 break;
             default:
-                var tag = '<'+element.widget+' id="">';
+                var tag = '<'+element.widget+' ';
+
+                if(element.id)
+                    tag += 'id="'+element.id+'" ';
+
+                if(element.name)
+                    tag += 'name="'+element.name+'" ';
+
+                if(element.value)
+                    tag += 'value="'+element.value+'" ';
+
+                if(element['aria-labelledby'])
+                    tag += 'aria-labelledby="'+element['aria-labelledby']+'" ';
+
+                tag += '>'
+
+                if(element.label){
+                    tag += element.label;
+                }
                 return tag;
         }
 
     }
 
-    function createEndTagHTML(element){
-        switch(element.widget){
-            case 'swc-tabs-pages':
-                var tag = '</paper-tabs>'
-                return tab;
-            default:
-                var tag = '</'+element.widget+'>';
-                return tag;
+    function createEndTagHTML(element) {
+        return '</' + element.widget + '>';
     }
 
   </script>
