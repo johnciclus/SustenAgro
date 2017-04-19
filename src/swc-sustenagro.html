@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
 <link rel="import" href="../bower_components/iron-component-page/iron-component-page.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
@@ -22,6 +23,7 @@
 <link rel="import" href="./swc-dsl-editor.html">
 <link rel="import" href="./swc-dsl-render.html">
 <link rel="import" href="./swc-tabs-pages.html">
+<link rel="import" href="./swc-feature.html">
 
 <dom-module id="swc-sustenagro">
     <template>
@@ -40,27 +42,17 @@
                 padding: 16px 40px;
             }
 
-            .card {
-                background-color: white;
-                max-width: 720px;
-                margin: 16px auto;
-                box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
-            }
-
             @media (max-width: 600px) {
                 .content {
                     padding: 0;
                 }
-                .card {
-                    margin: 8px;
-                }
             }
         </style>
         <app-header-layout>
-            <app-header fixed effects="waterfall">
+            <app-header condenses fixed>
                 <app-toolbar>
-                    <paper-icon-button icon="menu"></paper-icon-button>
                     <div main-title>SustenAgro</div>
+                    <paper-icon-button icon="menu"></paper-icon-button>
                 </app-toolbar>
             </app-header>
 
@@ -75,19 +67,25 @@
   </template>
 
   <script>
+
     Polymer({
         is: 'swc-sustenagro',
 
         ready: function(){
             var renderDiv = this.$.view;
 
-            RestClient({path: 'http://localhost:8080/'}).then(function (response) {
-                //render(response.entity, renderDiv);
-                renderHTML(response.entity);
-                renderDiv.innerHTML = html;
+            RestClient({path: 'http://localhost:8080/DataModel/datatypes.json'}).then(function (response) {
+                datatypes = response.entity[0];
+                RestClient({path: 'http://localhost:8080/DataModel/main.json'}).then(function (response) {
+                    renderHTML(response.entity);
+                    renderDiv.innerHTML = html;
+                });
             });
         }
     });
+
+    var html = '';
+    var datatypes = [];
 
     function render(elements, parent){
         if(typeof elements != 'undefined' && elements.length > 0) {
@@ -166,14 +164,14 @@
         }
     }
 
-    var html = '';
-
     function renderHTML(elements){
         if(typeof elements != 'undefined' && elements.length > 0) {
+            var element;
             for (var idx in elements) {
-                var element = elements[idx];
+                element = elements[idx];
 
-                if(typeof element.widget != 'undefined'){
+                if(typeof element.type != 'undefined' && datatypes[element.type]){
+                    element.widget = datatypes[element.type];
                     html += createStartTagHTML(element);
                 }
 
@@ -197,6 +195,18 @@
 
                 return "<swc-tabs-pages tab-items='"+JSON.stringify(tabsItems)+"'>";
                 break;
+            case 'div':
+                return "<div id='"+element.id+"'>";
+                break;
+            case 'fieldset':
+                var tag = "<fieldset id='"+element.id+"'>";
+                tag += "<legend><h5>"+element.label+"</h5></legend>"
+                return tag;
+                break;
+            case 'swc-feature':
+                var tag = "<swc-feature id='"+element.id+"' label='"+element.label+"'>";
+                return tag;
+                break;
             default:
                 var tag = '<'+element.widget+' ';
 
@@ -212,14 +222,13 @@
                 if(element['aria-labelledby'])
                     tag += 'aria-labelledby="'+element['aria-labelledby']+'" ';
 
-                tag += '>'
+                tag += '>';
 
                 if(element.label){
                     tag += element.label;
                 }
                 return tag;
         }
-
     }
 
     function createEndTagHTML(element) {
