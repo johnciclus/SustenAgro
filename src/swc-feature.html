@@ -4,11 +4,17 @@
 <dom-module id="swc-feature">
     <template>
         <style>
+            paper-radio-group {
+                display: block;
+            }
 
+            .feature {
+                margin: 15px 0px;
+            }
         </style>
-        <div>
+        <div class="feature">
             <label id="{{id}}">{{label}}</label>
-            <paper-radio-group aria-labelledby="{{id}}">
+            <paper-radio-group aria-labelledby="{{id}}" allow-empty-selection>
                 <content></content>
             </paper-radio-group>
         </div>

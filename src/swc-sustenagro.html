@@ -16,19 +16,28 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
+
+<link rel="import" href="../pages/input-page.html">
 
 <link rel="import" href="./swc-dsl-editor.html">
 <link rel="import" href="./swc-dsl-render.html">
 <link rel="import" href="./swc-tabs-pages.html">
 <link rel="import" href="./swc-feature.html">
+<link rel="import" href="./swc-sustainability-matrix.html">
+<link rel="import" href="./swc-sustainability-semaphore.html">
 
 <dom-module id="swc-sustenagro">
     <template>
         <style>
-
             app-header {
                 background-color: white;
             }
@@ -48,192 +57,257 @@
                 }
             }
         </style>
+
+        <app-location route="{{route}}"></app-location>
+
+        <app-route
+                route="{{route}}"
+                pattern="/:page"
+                data="{{data}}"
+                tail="{{tail}}">
+        </app-route>
+
         <app-header-layout>
             <app-header condenses fixed>
                 <app-toolbar>
                     <div main-title>SustenAgro</div>
+                    <paper-button on-tap="changeViewInstance">
+                        <iron-icon icon="add"></iron-icon>Instance
+                    </paper-button>
+                    <paper-button on-tap="changeViewInput">
+                        <iron-icon icon="input"></iron-icon>Input
+                    </paper-button>
+                    <paper-button on-tap="changeViewReport">
+                        <iron-icon icon="assessment"></iron-icon>Report
+                    </paper-button>
+                    <paper-button on-tap="changeViewAdmin">
+                        <iron-icon icon="build"></iron-icon>Admin
+                    </paper-button>
                     <paper-icon-button icon="menu"></paper-icon-button>
                 </app-toolbar>
             </app-header>
 
-
-            <form is="iron-form" id="form" method="post" action="/form/handler">
-                <div id="view" class="content">
+            <iron-pages selected="{{data.page}}" attr-for-selected='id'>
+                <div id="instance">
 
                 </div>
-            </form>
+                <div id="input">
+                    <form is="iron-form" id="form" method="post" action="/form/handler">
+                        <div id="inputView" class="content">
 
+                        </div>
+                    </form>
+                </div>
+                <div id="report">
+                    <div id="reportView" class="content">
+
+                    </div>
+                </div>
+                <div id="admin">
+
+                </div>
+            </iron-pages>
         </app-header-layout>
   </template>
 
-  <script>
+    <script>
 
-    Polymer({
-        is: 'swc-sustenagro',
+        Polymer({
+            is: 'swc-sustenagro',
 
-        ready: function(){
-            var renderDiv = this.$.view;
+            ready: function(){
+                var renderDiv = this.$.inputView;
 
-            RestClient({path: 'http://localhost:8080/DataModel/datatypes.json'}).then(function (response) {
-                datatypes = response.entity[0];
-                RestClient({path: 'http://localhost:8080/DataModel/main.json'}).then(function (response) {
+                if(typeof RestClient != 'undefined'){
+                    RestClient({path: 'http://localhost:8080/DataModel/datatypes.json'}).then(function (response) {
+                        datatypes = response.entity[0];
+                        RestClient({path: 'http://localhost:8080/DataModel/input.json'}).then(function (response) {
+                            renderHTML(response.entity);
+                            renderDiv.innerHTML = html;
+                        });
+                    });
+                }
+            },
+
+            changeViewInstance: function(event){
+                var button = event.target;
+                this.set('route.path', '/instance');
+            },
+
+            changeViewInput: function(event){
+                var button = event.target;
+                this.set('route.path', '/input');
+            },
+
+            changeViewReport: function(event){
+                var button = event.target;
+                var renderDiv = this.$.reportView;
+
+                html = '';
+
+                RestClient({path: 'http://localhost:8080/DataModel/report.json'}).then(function (response) {
                     renderHTML(response.entity);
                     renderDiv.innerHTML = html;
                 });
-            });
-        }
-    });
 
-    var html = '';
-    var datatypes = [];
+                this.set('route.path', '/report');
+            },
 
-    function render(elements, parent){
-        if(typeof elements != 'undefined' && elements.length > 0) {
-            for (var idx in elements) {
-                var element = elements[idx];
-                var swc = createWebComponent(element, parent);
+            changeViewAdmin: function(event){
+                var button = event.target;
+                this.set('route.path', '/admin');
+            },
+        });
 
-                setTimeout(createSubTree.bind(null, element, swc), 0);
+        var html = '';
+        var datatypes = [];
+
+        function render(elements, parent){
+            if(typeof elements != 'undefined' && elements.length > 0) {
+                for (var idx in elements) {
+                    var element = elements[idx];
+                    var swc = createWebComponent(element, parent);
+
+                    setTimeout(createSubTree.bind(null, element, swc), 0);
+                }
             }
         }
-    }
 
-    function createSubTree(element, swc) {
-        var children = element.children;
-        var current = element;
-        var container = swc;
+        function createSubTree(element, swc) {
+            var children = element.children;
+            var current = element;
+            var container = swc;
 
-        if(typeof swc.getContainer === "function"){
-            for(var idc in children){
-                current = children[idc];
-                container = swc.getContainer(idc)
+            if(typeof swc.getContainer === "function"){
+                for(var idc in children){
+                    current = children[idc];
+                    container = swc.getContainer(idc)
+                    render(current.children, container)
+                }
+            }
+            else{
                 render(current.children, container)
             }
         }
-        else{
-            render(current.children, container)
-        }
-    }
 
-    function createWebComponent(element, parent){
-        if(typeof element.widget == 'undefined'){
-            return undefined;
+        function createWebComponent(element, parent){
+            if(typeof element.widget == 'undefined'){
+                return undefined;
+            }
+            else{
+                switch (element.widget){
+                    case 'swc-tabs-pages':
+                        var tag = document.createElement(element.widget);
+                        var tabsItems = [];
+
+                        for(var idx in element.children){
+                            tabsItems.push({"name": element.children[idx].label});
+                        }
+                        tag.setAttribute("tab-items", JSON.stringify(tabsItems));
+                        parent.appendChild(tag);
+                        return tag;
+                        break;
+                    default:
+                        var tag = document.createElement(element.widget);
+
+                        if(element.id)
+                            tag.setAttribute('id', element.id);
+
+                        if(element.name)
+                            tag.setAttribute('name', element.name);
+
+                        if(element.value)
+                            tag.setAttribute('value', element.value);
+
+                        if(element.label){
+                            var content = document.createTextNode(element.label);
+                            tag.appendChild(content)
+                        }
+
+                        if(element['aria-labelledby'])
+                            tag.setAttribute('aria-labelledby', element['aria-labelledby']);
+
+                        if(element.value)
+                            tag.value = element.value;
+
+                        if(element.type)
+                            tag.setAttribute('type', element.type);
+
+                        parent.appendChild(tag);
+                        return tag;
+                }
+            }
         }
-        else{
-            switch (element.widget){
+
+        function renderHTML(elements){
+            if(typeof elements != 'undefined' && elements.length > 0) {
+                var element;
+                for (var idx in elements) {
+                    element = elements[idx];
+
+                    if(typeof element.type != 'undefined' && datatypes[element.type]){
+                        element.widget = datatypes[element.type];
+                        html += createStartTagHTML(element);
+                    }
+
+                    renderHTML(element.children);
+
+                    if(typeof element.widget != 'undefined'){
+                        html += createEndTagHTML(element);
+                    }
+                }
+            }
+        }
+
+        function createStartTagHTML(element){
+            switch(element.widget){
                 case 'swc-tabs-pages':
-                    var tag = document.createElement(element.widget);
                     var tabsItems = [];
 
                     for(var idx in element.children){
-                        tabsItems.push({"name": element.children[idx].label});
+                        tabsItems.push({"name": element.children[idx].label, "id": element.children[idx].id});
                     }
-                    tag.setAttribute("tab-items", JSON.stringify(tabsItems));
-                    parent.appendChild(tag);
+
+                    return "<swc-tabs-pages tab-items='"+JSON.stringify(tabsItems)+"'>";
+                    break;
+                case 'div':
+                    return "<div id='"+element.id+"'>";
+                    break;
+                case 'fieldset':
+                    var tag = "<fieldset id='"+element.id+"'>";
+                    tag += "<legend><h5>"+element.label+"</h5></legend>"
+                    return tag;
+                    break;
+                case 'swc-feature':
+                    var tag = "<swc-feature id='"+element.id+"' label='"+element.label+"'>";
                     return tag;
                     break;
                 default:
-                    var tag = document.createElement(element.widget);
+                    var tag = '<'+element.widget+' ';
 
                     if(element.id)
-                        tag.setAttribute('id', element.id);
+                        tag += 'id="'+element.id+'" ';
 
                     if(element.name)
-                        tag.setAttribute('name', element.name);
+                        tag += 'name="'+element.name+'" ';
 
                     if(element.value)
-                        tag.setAttribute('value', element.value);
-
-                    if(element.label){
-                        var content = document.createTextNode(element.label);
-                        tag.appendChild(content)
-                    }
+                        tag += 'value="'+element.value+'" ';
 
                     if(element['aria-labelledby'])
-                        tag.setAttribute('aria-labelledby', element['aria-labelledby']);
+                        tag += 'aria-labelledby="'+element['aria-labelledby']+'" ';
 
-                    if(element.value)
-                        tag.value = element.value;
+                    tag += '>';
 
-                    if(element.type)
-                        tag.setAttribute('type', element.type);
-
-                    parent.appendChild(tag);
+                    if(element.label){
+                        tag += element.label;
+                    }
                     return tag;
             }
         }
-    }
 
-    function renderHTML(elements){
-        if(typeof elements != 'undefined' && elements.length > 0) {
-            var element;
-            for (var idx in elements) {
-                element = elements[idx];
-
-                if(typeof element.type != 'undefined' && datatypes[element.type]){
-                    element.widget = datatypes[element.type];
-                    html += createStartTagHTML(element);
-                }
-
-                renderHTML(element.children);
-
-                if(typeof element.widget != 'undefined'){
-                    html += createEndTagHTML(element);
-                }
-            }
+        function createEndTagHTML(element) {
+            return '</' + element.widget + '>';
         }
-    }
-
-    function createStartTagHTML(element){
-        switch(element.widget){
-            case 'swc-tabs-pages':
-                var tabsItems = [];
-
-                for(var idx in element.children){
-                    tabsItems.push({"name": element.children[idx].label, "id": element.children[idx].id});
-                }
-
-                return "<swc-tabs-pages tab-items='"+JSON.stringify(tabsItems)+"'>";
-                break;
-            case 'div':
-                return "<div id='"+element.id+"'>";
-                break;
-            case 'fieldset':
-                var tag = "<fieldset id='"+element.id+"'>";
-                tag += "<legend><h5>"+element.label+"</h5></legend>"
-                return tag;
-                break;
-            case 'swc-feature':
-                var tag = "<swc-feature id='"+element.id+"' label='"+element.label+"'>";
-                return tag;
-                break;
-            default:
-                var tag = '<'+element.widget+' ';
-
-                if(element.id)
-                    tag += 'id="'+element.id+'" ';
-
-                if(element.name)
-                    tag += 'name="'+element.name+'" ';
-
-                if(element.value)
-                    tag += 'value="'+element.value+'" ';
-
-                if(element['aria-labelledby'])
-                    tag += 'aria-labelledby="'+element['aria-labelledby']+'" ';
-
-                tag += '>';
-
-                if(element.label){
-                    tag += element.label;
-                }
-                return tag;
-        }
-    }
-
-    function createEndTagHTML(element) {
-        return '</' + element.widget + '>';
-    }
-
-  </script>
+    </script>
 </dom-module>

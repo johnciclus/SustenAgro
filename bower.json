@@ -17,7 +17,10 @@
     "app-layout": "PolymerElements/app-layout#^0.10.7",
     "rest": "^2.0.0",
     "curl": "^0.8.13",
-    "when": "^3.7.8"
+    "when": "^3.7.8",
+    "app-route": "PolymerElements/app-route#^1.0.1",
+    "neon-animation": "^1.2.5",
+    "paper-input": "^1.1.24"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
