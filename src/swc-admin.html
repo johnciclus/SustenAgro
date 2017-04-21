@@ -189,7 +189,6 @@
         return tabs;
     }
 
-
     RestClient({path: 'http://localhost:8080/DSL'}).then(function (response) {
         var code = response.entity.code;
         document.getElementById('dslEditor').value = code;

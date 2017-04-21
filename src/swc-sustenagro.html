@@ -1,15 +1,16 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/iron-component-page/iron-component-page.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/iron-icons">
-<link rel="import" href="../bower_components/iron-icon">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-meta/iron-meta.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
@@ -26,8 +27,6 @@
 <link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
 
-<link rel="import" href="../pages/input-page.html">
-
 <link rel="import" href="./swc-dsl-editor.html">
 <link rel="import" href="./swc-dsl-render.html">
 <link rel="import" href="./swc-tabs-pages.html">
@@ -38,21 +37,27 @@
 <dom-module id="swc-sustenagro">
     <template>
         <style>
-            app-header {
-                background-color: white;
+            app-toolbar {
+                background-color: rgba(255, 255, 255, 0.95);
+                box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
             }
 
-            app-toolbar {
+            section {
+                padding: 16px 40px;
+            }
+
+            .container {
+                margin: 0 auto;
+            }
+
+            .paper {
+                padding: 10px 12px;
                 background-color: white;
                 box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
             }
 
-            .content {
-                padding: 16px 40px;
-            }
-
             @media (max-width: 600px) {
-                .content {
+                section {
                     padding: 0;
                 }
             }
@@ -68,7 +73,7 @@
         </app-route>
 
         <app-header-layout>
-            <app-header condenses fixed>
+            <app-header fixed>
                 <app-toolbar>
                     <div main-title>SustenAgro</div>
                     <paper-button on-tap="changeViewInstance">
@@ -88,24 +93,32 @@
             </app-header>
 
             <iron-pages selected="{{data.page}}" attr-for-selected='id'>
-                <div id="instance">
+                <section>
+                    <div class="container paper ">
 
-                </div>
-                <div id="input">
+                    </div>
+                </section>
+                <section id="instance">
+                    <div class="container paper">
+                    </div>
+                </section>
+                <section id="input">
                     <form is="iron-form" id="form" method="post" action="/form/handler">
-                        <div id="inputView" class="content">
+                        <div id="inputView" class="container">
 
                         </div>
                     </form>
-                </div>
-                <div id="report">
-                    <div id="reportView" class="content">
+                </section>
+                <section id="report">
+                    <div id="reportView" class="container paper">
 
                     </div>
-                </div>
-                <div id="admin">
+                </section>
+                <section id="admin" >
+                    <div class="container">
 
-                </div>
+                    </div>
+                </section>
             </iron-pages>
         </app-header-layout>
   </template>
@@ -116,14 +129,29 @@
             is: 'swc-sustenagro',
 
             ready: function(){
-                var renderDiv = this.$.inputView;
-
+                var DOM = this.$;
+                var route = this.get('route');
+                console.log(route);
                 if(typeof RestClient != 'undefined'){
+
                     RestClient({path: 'http://localhost:8080/DataModel/datatypes.json'}).then(function (response) {
                         datatypes = response.entity[0];
-                        RestClient({path: 'http://localhost:8080/DataModel/input.json'}).then(function (response) {
+                        RestClient({path: 'http://localhost:8080/DataModel'+route.path+'.json'}).then(function (response) {
                             renderHTML(response.entity);
-                            renderDiv.innerHTML = html;
+
+                            switch (route.path){
+                                case '/':
+                                    break;
+
+                                case '/input':
+                                    DOM.inputView.innerHTML = html;
+                                    break;
+
+                                case '/report':
+                                    DOM.reportView.innerHTML = html;
+                                    break;
+
+                            }
                         });
                     });
                 }
@@ -267,7 +295,6 @@
                     for(var idx in element.children){
                         tabsItems.push({"name": element.children[idx].label, "id": element.children[idx].id});
                     }
-
                     return "<swc-tabs-pages tab-items='"+JSON.stringify(tabsItems)+"'>";
                     break;
                 case 'div':
@@ -275,31 +302,84 @@
                     break;
                 case 'fieldset':
                     var tag = "<fieldset id='"+element.id+"'>";
-                    tag += "<legend><h5>"+element.label+"</h5></legend>"
+                    tag += "<legend><h4>"+element.label+"</h4></legend>"
                     return tag;
                     break;
                 case 'swc-feature':
                     var tag = "<swc-feature id='"+element.id+"' label='"+element.label+"'>";
                     return tag;
                     break;
-                default:
-                    var tag = '<'+element.widget+' ';
-
+                case 'swc-sustainability-matrix':
+                    var tag = "<swc-sustainability-matrix ";
                     if(element.id)
                         tag += 'id="'+element.id+'" ';
 
-                    if(element.name)
-                        tag += 'name="'+element.name+'" ';
+                    if('x' in element)
+                        tag += 'x="'+element.x+'" ';
+
+                    if('y' in element)
+                        tag += 'y="'+element.y+'" ';
+
+                    if('label_x' in element)
+                        tag += "label_x='"+JSON.stringify(element.label_x)+"' ";
+
+                    if('label_y' in element)
+                        tag += "label_y='"+JSON.stringify(element.label_y)+"' ";
+
+                    if('range_x' in element)
+                        tag += "range_x='"+JSON.stringify(element.range_x)+"' ";
+
+                    if('range_y' in element)
+                        tag += "range_y='"+JSON.stringify(element.range_y)+"' ";
+
+                    if('quadrants' in element)
+                        tag += "quadrants='"+JSON.stringify(element.quadrants)+"' ";
+
+                    if('recomendations' in element)
+                        tag += "recomendations='"+JSON.stringify(element.recomendations)+"' ";
+
+                    tag += ">";
+
+                    return tag;
+                    break;
+
+                case 'swc-sustainability-semaphore':
+                    var tag = "<swc-sustainability-semaphore ";
+                    if(element.id)
+                        tag += 'id="'+element.id+'" ';
 
                     if(element.value)
                         tag += 'value="'+element.value+'" ';
 
-                    if(element['aria-labelledby'])
-                        tag += 'aria-labelledby="'+element['aria-labelledby']+'" ';
+                    if('label' in element)
+                        tag += "label='"+JSON.stringify(element.label)+"' ";
+
+                    if('legend' in element)
+                        tag += "legend='"+JSON.stringify(element.legend)+"' ";
+
+                    if('range' in element)
+                        tag += "range='"+JSON.stringify(element.range)+"' ";
+
+                    tag += ">";
+
+                    return tag;
+                    break;
+
+                default:
+                    var tag = '<'+element.widget+' ';
+
+                    if('id' in element)
+                        tag += 'id="'+element.id+'" ';
+
+                    if('name' in element)
+                        tag += 'name="'+element.name+'" ';
+
+                    if('value' in element)
+                        tag += 'value="'+element.value+'" ';
 
                     tag += '>';
 
-                    if(element.label){
+                    if('label' in element){
                         tag += element.label;
                     }
                     return tag;
@@ -308,6 +388,10 @@
 
         function createEndTagHTML(element) {
             return '</' + element.widget + '>';
+        }
+
+        function getDataModel(name){
+
         }
     </script>
 </dom-module>
