@@ -2,28 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="02d30368-837c-460d-a5f4-c4b5ea9d9899" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/polymer/polymer-micro.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/polymer/polymer-mini.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/polymer/polymer.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/CustomElements.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/CustomElements.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/HTMLImports.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/HTMLImports.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/MutationObserver.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/MutationObserver.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/ShadowDOM.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/ShadowDOM.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/webcomponents-lite.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/webcomponents-lite.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/webcomponents.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/bower_components/webcomponentsjs/webcomponents.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/default/src/swc-sustenagro/swc-sustenagro.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/swc-feature.html" afterPath="$PROJECT_DIR$/src/swc-category.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/swc-admin.html" afterPath="$PROJECT_DIR$/src/swc-admin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/swc-sustainability-matrix.html" afterPath="$PROJECT_DIR$/src/swc-sustainability-matrix.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/swc-sustainability-semaphore.html" afterPath="$PROJECT_DIR$/src/swc-sustainability-semaphore.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/swc-sustenagro.html" afterPath="$PROJECT_DIR$/src/swc-sustenagro.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -42,19 +22,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="swc-sustenagro.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="swc-sustenagro.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/swc-sustenagro.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-706">
-              <caret line="138" column="123" lean-forward="true" selection-start-line="138" selection-start-column="24" selection-end-line="138" selection-end-column="123" />
+            <state relative-caret-position="362">
+              <caret line="198" column="79" lean-forward="false" selection-start-line="198" selection-start-column="79" selection-end-line="198" selection-end-column="79" />
               <folding>
-                <element signature="e#7714#8065#0" expanded="false" />
-                <element signature="e#8112#8606#0" expanded="false" />
-                <element signature="e#8660#10469#0" expanded="false" />
-                <element signature="e#10508#11173#0" expanded="false" />
-                <element signature="e#11219#14788#0" expanded="false" />
-                <element signature="e#14833#14892#0" expanded="false" />
+                <element signature="e#2712#2853#0" expanded="false" />
+                <element signature="e#2875#2926#0" expanded="false" />
+                <element signature="e#2951#2998#0" expanded="false" />
+                <element signature="e#3019#3176#0" expanded="false" />
+                <element signature="e#3190#3307#0" expanded="false" />
+                <element signature="e#6585#7250#0" expanded="false" />
+                <element signature="e#11529#11588#0" expanded="false" />
+                <element signature="e#11635#11811#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="swc-category.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/swc-category.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="27" column="33" lean-forward="false" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="33" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -70,11 +62,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>paper-menu</find>
-      <find>layout</find>
-      <find>paper-tab</find>
-      <find>tabsContainer</find>
-      <find>content</find>
       <find>iron-select</find>
       <find>selected</find>
       <find>_onIronSelect</find>
@@ -100,6 +87,11 @@
       <find>legend</find>
       <find>waterfall</find>
       <find>app-header</find>
+      <find>datatypes</find>
+      <find>console</find>
+      <find>createWebComponent</find>
+      <find>paper-input</find>
+      <find>pt</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -146,6 +138,8 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/src/swc-sustainability-matrix.html" />
         <option value="$PROJECT_DIR$/src/swc-sustainability-semaphore.html" />
+        <option value="$PROJECT_DIR$/src/swc-caterogry.html" />
+        <option value="$PROJECT_DIR$/src/swc-category.html" />
         <option value="$PROJECT_DIR$/src/swc-sustenagro.html" />
       </list>
     </option>
@@ -177,6 +171,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -219,8 +215,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -389,11 +383,13 @@
       <workItem from="1492691954376" duration="26000" />
       <workItem from="1492695842241" duration="1728000" />
       <workItem from="1492707346753" duration="13764000" />
+      <workItem from="1492735350597" duration="600000" />
+      <workItem from="1492781144894" duration="15586000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="218060000" />
+    <option name="totallyTimeSpent" value="234246000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -406,6 +402,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="960" height="1053" extended-state="4" />
+    <editor active="true" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.246875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -434,20 +431,19 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/shop-button.html" />
     <entry file="file://$PROJECT_DIR$/bower_components/async/dist/async.min.map">
+      <provider editor-type-id="sourcemapFileViewerProvider">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
-      </provider>
-      <provider editor-type-id="sourcemapFileViewerProvider">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bower_components/juicy-ace-editor/juicy-ace-editor.html">
@@ -631,13 +627,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bower_components/paper-behaviors/paper-button-behavior.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-957">
-          <caret line="12" column="38" lean-forward="false" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/css/swc-sustenagro.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -670,15 +659,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/swc-feature.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" column="77" lean-forward="false" selection-start-line="16" selection-start-column="77" selection-end-line="16" selection-end-column="77" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -686,57 +666,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
           <caret line="190" column="4" lean-forward="false" selection-start-line="190" selection-start-column="4" selection-end-line="190" selection-end-column="4" />
-          <folding>
-            <element signature="n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="e#1317#1365#0" expanded="false" />
-            <element signature="e#1392#1588#0" expanded="false" />
-            <element signature="e#1515#1573#0" expanded="false" />
-            <element signature="e#1620#1664#0" expanded="false" />
-            <element signature="e#1690#1810#0" expanded="false" />
-            <element signature="e#1835#1939#0" expanded="false" />
-            <element signature="n#app-route#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#paper-toolbar#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#paper-tabs#0;n#paper-toolbar#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#paper-menu-button#0;n#paper-toolbar#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#paper-menu#0;n#paper-menu-button#0;n#paper-toolbar#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#0;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#0;n#div#0;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#paper-button#0;n#div#0;n#div#0;n#div#0;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#paper-button#1;n#div#0;n#div#0;n#div#0;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#div#0;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#1;n#div#0;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#1;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#0;n#div#1;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#div#1;n#iron-pages#0;n#template#0;n#dom-module#0;n#!!top" expanded="false" />
-            <element signature="e#4175#5096#0" expanded="false" />
-            <element signature="e#4237#4548#0" expanded="false" />
-            <element signature="e#4470#4536#0" expanded="false" />
-            <element signature="e#4584#4635#0" expanded="false" />
-            <element signature="e#4658#5090#0" expanded="false" />
-            <element signature="e#4681#4751#0" expanded="false" />
-            <element signature="e#4772#5016#0" expanded="false" />
-            <element signature="e#4837#5002#0" expanded="false" />
-            <element signature="e#4866#4984#0" expanded="false" />
-            <element signature="e#5036#5080#0" expanded="false" />
-            <element signature="e#5137#6222#0" expanded="false" />
-            <element signature="e#5147#5262#0" expanded="false" />
-            <element signature="e#5310#6216#0" expanded="false" />
-            <element signature="e#5348#5575#0" expanded="false" />
-            <element signature="e#5417#5482#0" expanded="false" />
-            <element signature="e#5503#5561#0" expanded="false" />
-            <element signature="e#5626#5937#0" expanded="false" />
-            <element signature="e#5757#5918#0" expanded="false" />
-            <element signature="e#5803#5900#0" expanded="false" />
-            <element signature="e#5954#6206#0" expanded="false" />
-            <element signature="e#6021#6192#0" expanded="false" />
-            <element signature="e#6257#6545#0" expanded="false" />
-            <element signature="e#6381#6451#0" expanded="false" />
-            <element signature="e#6624#6731#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -744,23 +673,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="866">
           <caret line="291" column="41" lean-forward="false" selection-start-line="291" selection-start-column="41" selection-end-line="291" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/default/src/swc-sustenagro/swc-sustenagro.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="25" lean-forward="false" selection-start-line="2" selection-start-column="25" selection-end-line="2" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/build/default/src/swc-sustenagro/swc-sustenagro.html" />
     <entry file="file://$PROJECT_DIR$/bower_components/iron-meta/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -768,7 +688,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-5220">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -776,7 +695,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="22" column="36" lean-forward="false" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -784,7 +702,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="22" column="36" lean-forward="false" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -800,7 +717,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -808,7 +724,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="520">
           <caret line="26" column="29" lean-forward="false" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -816,22 +731,47 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-97">
           <caret line="7" column="12" lean-forward="true" selection-start-line="7" selection-start-column="12" selection-end-line="14" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/paper-behaviors/paper-button-behavior.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-957">
+          <caret line="12" column="38" lean-forward="false" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/paper-behaviors/demo/paper-button.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="44" lean-forward="false" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/swc-sustenagro.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-706">
-          <caret line="138" column="123" lean-forward="true" selection-start-line="138" selection-start-column="24" selection-end-line="138" selection-end-column="123" />
+        <state relative-caret-position="362">
+          <caret line="198" column="79" lean-forward="false" selection-start-line="198" selection-start-column="79" selection-end-line="198" selection-end-column="79" />
           <folding>
-            <element signature="e#7714#8065#0" expanded="false" />
-            <element signature="e#8112#8606#0" expanded="false" />
-            <element signature="e#8660#10469#0" expanded="false" />
-            <element signature="e#10508#11173#0" expanded="false" />
-            <element signature="e#11219#14788#0" expanded="false" />
-            <element signature="e#14833#14892#0" expanded="false" />
+            <element signature="e#2712#2853#0" expanded="false" />
+            <element signature="e#2875#2926#0" expanded="false" />
+            <element signature="e#2951#2998#0" expanded="false" />
+            <element signature="e#3019#3176#0" expanded="false" />
+            <element signature="e#3190#3307#0" expanded="false" />
+            <element signature="e#6585#7250#0" expanded="false" />
+            <element signature="e#11529#11588#0" expanded="false" />
+            <element signature="e#11635#11811#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/swc-category.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="27" column="33" lean-forward="false" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>

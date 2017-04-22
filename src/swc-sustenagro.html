@@ -30,7 +30,7 @@
 <link rel="import" href="./swc-dsl-editor.html">
 <link rel="import" href="./swc-dsl-render.html">
 <link rel="import" href="./swc-tabs-pages.html">
-<link rel="import" href="./swc-feature.html">
+<link rel="import" href="swc-category.html">
 <link rel="import" href="./swc-sustainability-matrix.html">
 <link rel="import" href="./swc-sustainability-semaphore.html">
 
@@ -76,16 +76,16 @@
             <app-header fixed>
                 <app-toolbar>
                     <div main-title>SustenAgro</div>
-                    <paper-button on-tap="changeViewInstance">
+                    <paper-button name="instance" on-tap="changeViewEvent">
                         <iron-icon icon="add"></iron-icon>Instance
                     </paper-button>
-                    <paper-button on-tap="changeViewInput">
+                    <paper-button name="input" on-tap="changeViewEvent">
                         <iron-icon icon="input"></iron-icon>Input
                     </paper-button>
-                    <paper-button on-tap="changeViewReport">
+                    <paper-button name="report" on-tap="changeViewEvent">
                         <iron-icon icon="assessment"></iron-icon>Report
                     </paper-button>
-                    <paper-button on-tap="changeViewAdmin">
+                    <paper-button name="admin" on-tap="changeViewEvent">
                         <iron-icon icon="build"></iron-icon>Admin
                     </paper-button>
                     <paper-icon-button icon="menu"></paper-icon-button>
@@ -93,13 +93,13 @@
             </app-header>
 
             <iron-pages selected="{{data.page}}" attr-for-selected='id'>
-                <section>
-                    <div class="container paper ">
+                <section id="main">
+                    <div id="mainView" class="container paper">
 
                     </div>
                 </section>
                 <section id="instance">
-                    <div class="container paper">
+                    <div id="instanceView" class="container paper">
                     </div>
                 </section>
                 <section id="input">
@@ -115,7 +115,7 @@
                     </div>
                 </section>
                 <section id="admin" >
-                    <div class="container">
+                    <div id="adminView" class="container">
 
                     </div>
                 </section>
@@ -129,143 +129,30 @@
             is: 'swc-sustenagro',
 
             ready: function(){
-                var DOM = this.$;
                 var route = this.get('route');
-                console.log(route);
-                if(typeof RestClient != 'undefined'){
+                var name = (route.path != '/') ? route.path.substring(1) : 'main';
+                var renderDiv = document.getElementById(name+'View');
 
-                    RestClient({path: 'http://localhost:8080/DataModel/datatypes.json'}).then(function (response) {
-                        datatypes = response.entity[0];
-                        RestClient({path: 'http://localhost:8080/DataModel'+route.path+'.json'}).then(function (response) {
-                            renderHTML(response.entity);
-
-                            switch (route.path){
-                                case '/':
-                                    break;
-
-                                case '/input':
-                                    DOM.inputView.innerHTML = html;
-                                    break;
-
-                                case '/report':
-                                    DOM.reportView.innerHTML = html;
-                                    break;
-
-                            }
+                if(renderDiv != null){
+                    if(typeof RestClient != 'undefined'){
+                        RestClient({path: 'http://localhost:8080/DataModel/datatypes.json'}).then(function (response) {
+                            datatypes = response.entity;
+                            changeView(name);
                         });
-                    });
+                    }
                 }
             },
 
-            changeViewInstance: function(event){
+            changeViewEvent: function(event){
                 var button = event.target;
-                this.set('route.path', '/instance');
-            },
+                var name = button.getAttribute('name');
 
-            changeViewInput: function(event){
-                var button = event.target;
-                this.set('route.path', '/input');
-            },
-
-            changeViewReport: function(event){
-                var button = event.target;
-                var renderDiv = this.$.reportView;
-
-                html = '';
-
-                RestClient({path: 'http://localhost:8080/DataModel/report.json'}).then(function (response) {
-                    renderHTML(response.entity);
-                    renderDiv.innerHTML = html;
-                });
-
-                this.set('route.path', '/report');
-            },
-
-            changeViewAdmin: function(event){
-                var button = event.target;
-                this.set('route.path', '/admin');
-            },
+                changeView(name);
+            }
         });
 
         var html = '';
         var datatypes = [];
-
-        function render(elements, parent){
-            if(typeof elements != 'undefined' && elements.length > 0) {
-                for (var idx in elements) {
-                    var element = elements[idx];
-                    var swc = createWebComponent(element, parent);
-
-                    setTimeout(createSubTree.bind(null, element, swc), 0);
-                }
-            }
-        }
-
-        function createSubTree(element, swc) {
-            var children = element.children;
-            var current = element;
-            var container = swc;
-
-            if(typeof swc.getContainer === "function"){
-                for(var idc in children){
-                    current = children[idc];
-                    container = swc.getContainer(idc)
-                    render(current.children, container)
-                }
-            }
-            else{
-                render(current.children, container)
-            }
-        }
-
-        function createWebComponent(element, parent){
-            if(typeof element.widget == 'undefined'){
-                return undefined;
-            }
-            else{
-                switch (element.widget){
-                    case 'swc-tabs-pages':
-                        var tag = document.createElement(element.widget);
-                        var tabsItems = [];
-
-                        for(var idx in element.children){
-                            tabsItems.push({"name": element.children[idx].label});
-                        }
-                        tag.setAttribute("tab-items", JSON.stringify(tabsItems));
-                        parent.appendChild(tag);
-                        return tag;
-                        break;
-                    default:
-                        var tag = document.createElement(element.widget);
-
-                        if(element.id)
-                            tag.setAttribute('id', element.id);
-
-                        if(element.name)
-                            tag.setAttribute('name', element.name);
-
-                        if(element.value)
-                            tag.setAttribute('value', element.value);
-
-                        if(element.label){
-                            var content = document.createTextNode(element.label);
-                            tag.appendChild(content)
-                        }
-
-                        if(element['aria-labelledby'])
-                            tag.setAttribute('aria-labelledby', element['aria-labelledby']);
-
-                        if(element.value)
-                            tag.value = element.value;
-
-                        if(element.type)
-                            tag.setAttribute('type', element.type);
-
-                        parent.appendChild(tag);
-                        return tag;
-                }
-            }
-        }
 
         function renderHTML(elements){
             if(typeof elements != 'undefined' && elements.length > 0) {
@@ -305,8 +192,17 @@
                     tag += "<legend><h4>"+element.label+"</h4></legend>"
                     return tag;
                     break;
-                case 'swc-feature':
-                    var tag = "<swc-feature id='"+element.id+"' label='"+element.label+"'>";
+                case 'swc-category':
+                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
+                    var tag = "<swc-category id='"+element.id+"' label='"+ label+"' ";
+                    if('multipleSelection' in element)
+                        tag += 'multipleSelection='+element.multipleSelection+' ';
+                    tag += ">";
+                    return tag;
+                    break;
+                case 'paper-input':
+                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
+                    var tag = "<paper-input label='"+label+"'>";
                     return tag;
                     break;
                 case 'swc-sustainability-matrix':
@@ -366,6 +262,7 @@
                     break;
 
                 default:
+
                     var tag = '<'+element.widget+' ';
 
                     if('id' in element)
@@ -377,11 +274,16 @@
                     if('value' in element)
                         tag += 'value="'+element.value+'" ';
 
+
+
                     tag += '>';
 
                     if('label' in element){
                         tag += element.label;
                     }
+
+                    console.log(element)
+                    console.log(tag)
                     return tag;
             }
         }
@@ -390,8 +292,25 @@
             return '</' + element.widget + '>';
         }
 
-        function getDataModel(name){
-
+        function getDataModel(name, callback){
+            RestClient({path: 'http://localhost:8080/DataModel/'+name+'.json'}).then(function (response) {
+                callback(response.entity)
+            });
         }
+
+        function changeView(name) {
+            var sustenagro = document.getElementsByTagName('swc-sustenagro')[0];
+            var renderDiv = document.getElementById(name+'View');
+
+            if(sustenagro != null && renderDiv != null) {
+                getDataModel(name, function (response) {
+                    html = '';
+                    renderHTML(response);
+                    renderDiv.innerHTML = html;
+                    sustenagro.set('route.path', '/' + name);
+                });
+            }
+        }
+
     </script>
 </dom-module>
