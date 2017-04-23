@@ -5,27 +5,9 @@
     "John Garavito <john@ciclus.co>"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.4.0",
-    "juicy-ace-editor": "^2.0.0",
-    "paper-menu-button": "^1.5.2",
-    "paper-item": "^1.2.1",
-    "paper-icon-button": "^1.1.4",
-    "paper-menu": "^1.2.2",
-    "iron-icons": "^1.2.0",
-    "iron-icon": "^1.0.12",
-    "paper-toolbar": "^1.1.7",
-    "app-layout": "PolymerElements/app-layout#^0.10.7",
-    "rest": "^2.0.0",
-    "curl": "^0.8.13",
-    "when": "^3.7.8",
-    "app-route": "PolymerElements/app-route#^1.0.1",
-    "neon-animation": "^1.2.5",
-    "paper-input": "^1.1.24"
+
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
-    "web-component-tester": "^4.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+
   }
 }

@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-meta/iron-meta.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
@@ -22,6 +23,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-date-picker-item/paper-date-picker-item.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
@@ -30,7 +32,10 @@
 <link rel="import" href="./swc-dsl-editor.html">
 <link rel="import" href="./swc-dsl-render.html">
 <link rel="import" href="./swc-tabs-pages.html">
-<link rel="import" href="swc-category.html">
+<link rel="import" href="./swc-category.html">
+<link rel="import" href="./swc-list.html">
+<link rel="import" href="./swc-list-item.html">
+<link rel="import" href="./swc-date-picker.html">
 <link rel="import" href="./swc-sustainability-matrix.html">
 <link rel="import" href="./swc-sustainability-semaphore.html">
 
@@ -56,6 +61,16 @@
                 box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
             }
 
+            #logo{
+                margin: 0px 20px;
+                width: 120px;
+                height: 60px;
+            }
+
+            app-toolbar a{
+                pointer-events: auto;
+            }
+
             @media (max-width: 600px) {
                 section {
                     padding: 0;
@@ -75,7 +90,11 @@
         <app-header-layout>
             <app-header fixed>
                 <app-toolbar>
-                    <div main-title>SustenAgro</div>
+                    <div main-title>
+                        <a href="/">
+                            <iron-image id="logo" sizing="contain" alt="SustenAgro" src="/images/logo.png"></iron-image>
+                        </a>
+                    </div>
                     <paper-button name="instance" on-tap="changeViewEvent">
                         <iron-icon icon="add"></iron-icon>Instance
                     </paper-button>
@@ -200,9 +219,29 @@
                     tag += ">";
                     return tag;
                     break;
+                case 'swc-list':
+                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
+                    var tag = "<swc-list id='"+element.id+"' label='"+ label+"' >";
+                    return tag;
+                    break;
+                case 'paper-radio-button':
+                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
+                    var tag = "<paper-radio-button name='"+element.name+"' value='"+element.value+"'> "+ label;
+                    return tag;
+                    break;
+                case 'swc-list-item':
+                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
+                    var tag = "<swc-list-item name='"+element.name+"' label='"+ label+"' >";
+                    return tag;
+                    break;
                 case 'paper-input':
                     var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
                     var tag = "<paper-input label='"+label+"'>";
+                    return tag;
+                    break;
+                case 'swc-date-picker':
+                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
+                    var tag = "<swc-date-picker label='"+label+"'>";
                     return tag;
                     break;
                 case 'swc-sustainability-matrix':
@@ -274,16 +313,14 @@
                     if('value' in element)
                         tag += 'value="'+element.value+'" ';
 
-
-
                     tag += '>';
 
                     if('label' in element){
                         tag += element.label;
                     }
 
-                    console.log(element)
-                    console.log(tag)
+
+
                     return tag;
             }
         }
