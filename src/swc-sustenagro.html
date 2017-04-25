@@ -30,18 +30,18 @@
 <link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
 
-<link rel="import" href="./swc-list.html">
-<link rel="import" href="./swc-list-item.html">
-<link rel="import" href="./swc-date-picker.html">
-<link rel="import" href="./swc-sustainability-matrix.html">
-<link rel="import" href="./swc-sustainability-semaphore.html">
-<link rel="import" href="./swc-dsl-editor.html">
-<link rel="import" href="./swc-dsl-render.html">
-<link rel="import" href="./swc-tabs-pages.html">
-<link rel="import" href="./swc-category.html">
-<link rel="import" href="./swc-form.html">
+<link rel="import" href="swc-list.html">
+<link rel="import" href="swc-list-item.html">
+<link rel="import" href="swc-date-picker.html">
+<link rel="import" href="swc-sustainability-matrix.html">
+<link rel="import" href="swc-sustainability-semaphore.html">
+<link rel="import" href="swc-dsl-editor.html">
+<link rel="import" href="swc-ontology-editor.html">
+<link rel="import" href="swc-tabs-pages.html">
+<link rel="import" href="swc-category.html">
+<link rel="import" href="swc-admin.html">
+<link rel="import" href="swc-form.html">
 <link rel="import" href="swc-paper.html">
-
 
 <dom-module id="swc-sustenagro">
     <template>
@@ -49,10 +49,6 @@
             app-toolbar {
                 background-color: rgba(255, 255, 255, 0.95);
                 box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
-            }
-
-            section {
-                padding: 16px 40px;
             }
 
             app-toolbar a{
@@ -63,16 +59,16 @@
                 cursor: pointer;
             }
 
-            #logo{
-                margin: 0px 20px;
-                width: 120px;
-                height: 60px;
-            }
-
             @media (max-width: 600px) {
                 section {
                     padding: 0;
                 }
+            }
+
+            #logo{
+                 margin: 0px 20px;
+                 width: 120px;
+                 height: 60px;
             }
         </style>
 
@@ -109,19 +105,14 @@
 
             <iron-pages selected="{{data.page}}" attr-for-selected='id'>
                 <section id="main">
-
                 </section>
-                <section id="instance" >
-
+                <section id="instance">
                 </section>
                 <section id="input">
-
                 </section>
                 <section id="report">
-
                 </section>
-                <section id="admin" >
-
+                <section id="admin">
                 </section>
             </iron-pages>
         </app-header-layout>

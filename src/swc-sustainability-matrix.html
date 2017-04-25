@@ -33,6 +33,7 @@
                 range_y: Array,
                 recomendations: Array
             },
+
             ready: function(){
                 var result = Matrix("#matrix", {x: this.x, y: this.y, label_x: this.label_x['pt'], label_y: this.label_y['pt'], range_x: this.range_x, range_y: this.range_y, quadrants: this.quadrants, recomendations: this.recomendations })
                 Polymer.dom(this.$.matrixResult).innerHTML ="<p>Sustainability index: <b>"+this.x+"</b></p>"+

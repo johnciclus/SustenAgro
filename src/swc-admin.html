@@ -12,16 +12,17 @@
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="./swc-dsl-editor.html">
-<link rel="import" href="./swc-dsl-render.html">
-<link rel="import" href="./swc-tabs-pages.html">
+<link rel="import" href="swc-dsl-editor.html">
+<link rel="import" href="swc-ontology-editor.html">
+<link rel="import" href="swc-tabs-pages.html">
 
-<dom-module id="swc-sustenagro">
+<dom-module id="swc-admin">
     <template>
         <style include="iron-flex iron-flex-alignment">
             body{
                 font-size: 14px;
             }
+
             paper-toolbar {
                 color: #2196f3;
                 --paper-toolbar-background: #FFF;
@@ -46,15 +47,6 @@
             }
         </style>
 
-        <app-location route="{{route}}"></app-location>
-
-        <app-route
-                route="{{route}}"
-                pattern="/:page"
-                data="{{routeData}}"
-                tail="{{subroute}}">
-        </app-route>
-
         <paper-toolbar>
             <span class="title">Decisioner</span>
 
@@ -62,44 +54,28 @@
                 <paper-tab>DSL Editor</paper-tab>
                 <paper-tab>Ontology Editor</paper-tab>
             </paper-tabs>
-
-            <paper-menu-button>
-                <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-                <paper-menu class="dropdown-content">
-                    <paper-item>Admin</paper-item>
-                    <paper-item>Settings</paper-item>
-                    <paper-item>Exit</paper-item>
-                </paper-menu>
-            </paper-menu-button>
+            <paper-button raised on-tap="saveDSL">
+                <iron-icon icon="save"></iron-icon>SAVE
+            </paper-button>
+            <paper-button raised on-tap="clearViewDiv">
+                <iron-icon icon="restore"></iron-icon>RESTORE
+            </paper-button>
         </paper-toolbar>
 
         <iron-pages selected="{{selected}}">
             <div class="horizontal layout">
                 <div class="flex">
                     <div class="horizontal end-justified layout">
-                        <paper-button raised on-tap="saveDSL">
-                            <iron-icon icon="save"></iron-icon>SAVE
-                        </paper-button>
-                        <paper-button raised on-tap="clearViewDiv">
-                            <iron-icon icon="restore"></iron-icon>RESTORE
-                        </paper-button>
-                    </div>
-                    <swc-dsl-editor></swc-dsl-editor>
-                </div>
-                <div class="flex">
-                    <div id="view">
 
                     </div>
+                    <swc-dsl-editor></swc-dsl-editor>
                 </div>
             </div>
             <div class="horizontal layout">
                 <div class="flex">
                     <div>
-                        <swc-dsl-render></swc-dsl-render>
+                        <swc-ontology-editor></swc-ontology-editor>
                     </div>
-                </div>
-                <div class="flex">
-                    <swc-tabs-pages selected-tab="{{selectedTab}}" tab-items='[{"name": "Tab 0"}, {"name": "Tab 1"}, {"name": "Tab 2"}]'></swc-tabs-pages>
                 </div>
             </div>
         </iron-pages>
@@ -107,13 +83,29 @@
 
   <script>
     Polymer({
-        is: 'swc-sustenagro',
+        is: 'swc-admin',
+
+        properties: {
+            selected:{
+                type: Number,
+                value: 0
+            },
+            page: {
+                type: String
+            }
+        },
+
+        ready: function(){
+            RestClient({path: 'http://localhost:8080/DSL/main.json'}).then(function (response) {
+                var code = response.entity.dsl;
+                document.getElementById('dslEditor').value = code;
+            });
+        },
 
         saveDSL: function(e) {
-            var code = {code: document.getElementById('dslEditor').value};
-            var renderDiv = this.$.view;
-            RestClient({path: 'http://localhost:8080/DSL', entity: JSON.stringify(code)}).then(function (response) {
-                render(response.entity, renderDiv)
+            var data = {id: "main", code: document.getElementById('dslEditor').value};
+            RestClient({path: 'http://localhost:8080/DSL', entity: JSON.stringify(data)}).then(function (response) {
+                console.log('dsl saved')
             });
         },
 
@@ -121,77 +113,7 @@
             this.$.view.innerHTML = "";
         },
 
-        properties: {
-            selected:{
-                type: Number,
-                value: 0
-            },
-            model: {
-                type: Object,
-                value: function(){
-                    return {
-                        tab1: {content: 'foo'},
-                        tab2: {content: 'bar'}
-                    }
-                }
-            },
-            page: {
-                type: String
-            }
-        }
-    });
 
-    function render(elements, parent){
-        /*console.log('elements')
-        console.log(elements)
-        console.log('parent')
-        console.log(parent)*/
-        var type;
-        if(elements.length>0){
-            for(var idx in elements){
-                if(type == undefined || type == elements[idx].type){
-                    type = elements[idx].type
-                }
-                else{
-                    type == undefined;
-                }
-            }
-            if(type == 'tab' || type == 'feature'){
-                var tabs = createTabs(elements);
-                parent.appendChild(tabs)
-
-                setTimeout(function() {
-                    for(var idx in elements){
-                        render(elements[idx].children, tabs.getPage(idx))
-                    }
-                }, 0);
-            }
-            else{
-                var h4;
-
-                for(var idx in elements){
-                    h4 = document.createElement('h4')
-                    h4.innerHTML = elements[idx].label
-                    parent.appendChild(h4)
-                }
-            }
-        }
-    }
-
-    function createTabs(elements){
-        var tabs = document.createElement('swc-tabs-pages');
-        var tabsItems = [];
-
-        for(var idx in elements){
-            tabsItems.push({"name": elements[idx].label});
-        }
-        tabs.setAttribute("tab-items", JSON.stringify(tabsItems));
-        return tabs;
-    }
-
-    RestClient({path: 'http://localhost:8080/DSL'}).then(function (response) {
-        var code = response.entity.code;
-        document.getElementById('dslEditor').value = code;
     });
   </script>
 </dom-module>
