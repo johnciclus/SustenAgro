@@ -8,6 +8,7 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-meta/iron-meta.html">
@@ -29,15 +30,18 @@
 <link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
 
-<link rel="import" href="./swc-dsl-editor.html">
-<link rel="import" href="./swc-dsl-render.html">
-<link rel="import" href="./swc-tabs-pages.html">
-<link rel="import" href="./swc-category.html">
 <link rel="import" href="./swc-list.html">
 <link rel="import" href="./swc-list-item.html">
 <link rel="import" href="./swc-date-picker.html">
 <link rel="import" href="./swc-sustainability-matrix.html">
 <link rel="import" href="./swc-sustainability-semaphore.html">
+<link rel="import" href="./swc-dsl-editor.html">
+<link rel="import" href="./swc-dsl-render.html">
+<link rel="import" href="./swc-tabs-pages.html">
+<link rel="import" href="./swc-category.html">
+<link rel="import" href="./swc-form.html">
+<link rel="import" href="swc-paper.html">
+
 
 <dom-module id="swc-sustenagro">
     <template>
@@ -51,24 +55,18 @@
                 padding: 16px 40px;
             }
 
-            .container {
-                margin: 0 auto;
+            app-toolbar a{
+                pointer-events: auto;
             }
 
-            .paper {
-                padding: 10px 12px;
-                background-color: white;
-                box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+            paper-item{
+                cursor: pointer;
             }
 
             #logo{
                 margin: 0px 20px;
                 width: 120px;
                 height: 60px;
-            }
-
-            app-toolbar a{
-                pointer-events: auto;
             }
 
             @media (max-width: 600px) {
@@ -95,48 +93,35 @@
                             <iron-image id="logo" sizing="contain" alt="SustenAgro" src="/images/logo.png"></iron-image>
                         </a>
                     </div>
-                    <paper-button name="instance" on-tap="changeViewEvent">
-                        <iron-icon icon="add"></iron-icon>Instance
-                    </paper-button>
-                    <paper-button name="input" on-tap="changeViewEvent">
-                        <iron-icon icon="input"></iron-icon>Input
-                    </paper-button>
-                    <paper-button name="report" on-tap="changeViewEvent">
-                        <iron-icon icon="assessment"></iron-icon>Report
-                    </paper-button>
-                    <paper-button name="admin" on-tap="changeViewEvent">
-                        <iron-icon icon="build"></iron-icon>Admin
-                    </paper-button>
-                    <paper-icon-button icon="menu"></paper-icon-button>
+                    <paper-menu-button horizontal-align="right" horizontal-offset="10" vertical-offset="50">
+                        <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+                        <paper-menu class="dropdown-content">
+                            <paper-item name="instance" on-tap="changeViewEvent"><iron-icon icon="add"></iron-icon> Production Unit</paper-item>
+                            <paper-item name="input" on-tap="changeViewEvent"><iron-icon icon="input"></iron-icon> Assessment</paper-item>
+                            <paper-item name="report" on-tap="changeViewEvent"><iron-icon icon="assessment"></iron-icon> Report</paper-item>
+                            <paper-item name="admin" on-tap="changeViewEvent"><iron-icon icon="build"></iron-icon> Admin</paper-item>
+                            <paper-item>Settings</paper-item>
+                            <paper-item>Help</paper-item>
+                        </paper-menu>
+                    </paper-menu-button>
                 </app-toolbar>
             </app-header>
 
             <iron-pages selected="{{data.page}}" attr-for-selected='id'>
                 <section id="main">
-                    <div id="mainView" class="container paper">
 
-                    </div>
                 </section>
-                <section id="instance">
-                    <div id="instanceView" class="container paper">
-                    </div>
+                <section id="instance" >
+
                 </section>
                 <section id="input">
-                    <form is="iron-form" id="form" method="post" action="/form/handler">
-                        <div id="inputView" class="container">
 
-                        </div>
-                    </form>
                 </section>
                 <section id="report">
-                    <div id="reportView" class="container paper">
 
-                    </div>
                 </section>
                 <section id="admin" >
-                    <div id="adminView" class="container">
 
-                    </div>
                 </section>
             </iron-pages>
         </app-header-layout>
@@ -150,11 +135,11 @@
             ready: function(){
                 var route = this.get('route');
                 var name = (route.path != '/') ? route.path.substring(1) : 'main';
-                var renderDiv = document.getElementById(name+'View');
+                var renderDiv = document.getElementById(name);
 
                 if(renderDiv != null){
                     if(typeof RestClient != 'undefined'){
-                        RestClient({path: 'http://localhost:8080/DataModel/datatypes.json'}).then(function (response) {
+                        RestClient({path: 'http://localhost:8080/DataModel/dataTypes.json'}).then(function (response) {
                             datatypes = response.entity;
                             changeView(name);
                         });
@@ -163,8 +148,14 @@
             },
 
             changeViewEvent: function(event){
-                var button = event.target;
-                var name = button.getAttribute('name');
+                var element;
+                if(event.target.nodeName == "IRON-ICON" ){
+                    element = event.target.parentElement
+                }
+                else{
+                    element = event.target
+                }
+                var name = element.getAttribute('name');
 
                 changeView(name);
             }
@@ -194,10 +185,10 @@
         }
 
         function createStartTagHTML(element){
+            var tag = "", label = "";
             switch(element.widget){
                 case 'swc-tabs-pages':
                     var tabsItems = [];
-
                     for(var idx in element.children){
                         tabsItems.push({"name": element.children[idx].label, "id": element.children[idx].id});
                     }
@@ -207,45 +198,55 @@
                     return "<div id='"+element.id+"'>";
                     break;
                 case 'fieldset':
-                    var tag = "<fieldset id='"+element.id+"'>";
+                    tag = "<fieldset id='"+element.id+"'>";
                     tag += "<legend><h4>"+element.label+"</h4></legend>"
                     return tag;
                     break;
                 case 'swc-category':
-                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
-                    var tag = "<swc-category id='"+element.id+"' label='"+ label+"' ";
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<swc-category id='"+element.id+"' label='"+ label+"' ";
                     if('multipleSelection' in element)
                         tag += 'multipleSelection='+element.multipleSelection+' ';
                     tag += ">";
                     return tag;
                     break;
                 case 'swc-list':
-                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
-                    var tag = "<swc-list id='"+element.id+"' label='"+ label+"' >";
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<swc-list id='"+element.id+"' label='"+ label+"' >";
+                    return tag;
+                    break;
+                case 'swc-form':
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<swc-form action='"+ element.action+"' label='"+ label+"' >";
+                    return tag;
+                    break;
+                case 'swc-paper':
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<swc-paper label='"+ label+"' >";
                     return tag;
                     break;
                 case 'paper-radio-button':
-                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
-                    var tag = "<paper-radio-button name='"+element.name+"' value='"+element.value+"'> "+ label;
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<paper-radio-button name='"+element.name+"' value='"+element.value+"'> "+ label;
                     return tag;
                     break;
                 case 'swc-list-item':
-                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
-                    var tag = "<swc-list-item name='"+element.name+"' label='"+ label+"' >";
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<swc-list-item name='"+element.name+"' label='"+ label+"' >";
                     return tag;
                     break;
                 case 'paper-input':
-                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
-                    var tag = "<paper-input label='"+label+"'>";
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<paper-input name='"+element.name+"' label='"+label+"'>";
                     return tag;
                     break;
                 case 'swc-date-picker':
-                    var label = (typeof element.label == 'object')?  element.label['pt'] : element.label;
-                    var tag = "<swc-date-picker label='"+label+"'>";
+                    label = (typeof element.label === 'object')?  element.label['pt'] : element.label;
+                    tag = "<swc-date-picker label='"+label+"'>";
                     return tag;
                     break;
                 case 'swc-sustainability-matrix':
-                    var tag = "<swc-sustainability-matrix ";
+                    tag = "<swc-sustainability-matrix ";
                     if(element.id)
                         tag += 'id="'+element.id+'" ';
 
@@ -277,9 +278,8 @@
 
                     return tag;
                     break;
-
                 case 'swc-sustainability-semaphore':
-                    var tag = "<swc-sustainability-semaphore ";
+                    tag = "<swc-sustainability-semaphore ";
                     if(element.id)
                         tag += 'id="'+element.id+'" ';
 
@@ -299,10 +299,8 @@
 
                     return tag;
                     break;
-
                 default:
-
-                    var tag = '<'+element.widget+' ';
+                    tag = '<'+element.widget+' ';
 
                     if('id' in element)
                         tag += 'id="'+element.id+'" ';
@@ -318,8 +316,6 @@
                     if('label' in element){
                         tag += element.label;
                     }
-
-
 
                     return tag;
             }
@@ -337,14 +333,13 @@
 
         function changeView(name) {
             var sustenagro = document.getElementsByTagName('swc-sustenagro')[0];
-            var renderDiv = document.getElementById(name+'View');
-
+            var renderDiv = document.querySelector('iron-pages > #'+name);
+            sustenagro.set('route.path', '/' + name);
             if(sustenagro != null && renderDiv != null) {
                 getDataModel(name, function (response) {
                     html = '';
                     renderHTML(response);
                     renderDiv.innerHTML = html;
-                    sustenagro.set('route.path', '/' + name);
                 });
             }
         }
